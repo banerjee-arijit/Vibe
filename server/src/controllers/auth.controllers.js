@@ -1,7 +1,6 @@
 import userModel from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendWelcomeMail } from "../emails/emailHandlers.js";
 
 export const SignIn = async (req, res) => {
   const { email, password } = req.body;
@@ -68,13 +67,6 @@ export const SignUp = async (req, res) => {
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
-    const profileUrl = `${process.env.CLIENT_URL}/profile/${newUser.username}`;
-
-    try {
-      await sendWelcomeMail(newUser.email, newUser.username, profileUrl);
-    } catch (error) {
-      console.log("Error Sending Mail", error.message);
-    }
     return res
       .status(201)
       .json({ message: "User created successfully", user: newUser });
